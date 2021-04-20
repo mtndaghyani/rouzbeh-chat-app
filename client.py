@@ -8,8 +8,9 @@ if __name__ == '__main__':
     server = socket.socket()
     server.connect((IP, PORT))
     print("Connected to server!")
-    message = "My chat-application works!"
-    server.send(message.encode())
-    response = server.recv(1024).decode()
-    print(response)
-    server.close()
+    while True:
+        message = input("Enter your message:")
+        server.send(message.encode())
+        print("Your message is sent.")
+        response = server.recv(1024).decode()
+        print(response)
