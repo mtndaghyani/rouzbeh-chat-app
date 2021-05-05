@@ -34,6 +34,7 @@ def handle_command(command, name):
         print(send_to_server("users"))
     elif command == 4:
         print("Bye!")
+        print(send_to_server("exit", username))
         sys.exit(0)
     print()
 
