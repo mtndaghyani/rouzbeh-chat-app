@@ -23,7 +23,11 @@ def handle_client_message(client, message):
     elif message_params[0] == "users":
         server_response = "\n".join(users)
     elif message_params[0] == "refresh":
-        server_response = "\n".join(messages)
+        index = int(message_params[1])
+        server_response = str(len(messages) - index) + "/"
+        for i in range(index, len(messages)):
+            server_response += messages[i]
+            server_response += "\n"
     elif message_params[0] == "exit":
         for i in range(len(users)):
             if users[i].startswith(message_params[1]):

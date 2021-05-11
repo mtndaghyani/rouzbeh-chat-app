@@ -3,13 +3,13 @@ import sys
 
 IP = '127.0.0.1'
 PORT = 12345
+COUNTER = 0
 
 
-def send_to_server(command, *args):
+def send_to_server(command):
     server = socket.socket()
     server.connect((IP, PORT))
-    to_send = command + "/" + "/".join(args)
-    server.send(to_send.encode())
+    server.send(command.encode())
     response = (server.recv(1024)).decode()
     server.close()
     return response
@@ -25,16 +25,22 @@ def run_menu(name):
 
 
 def handle_command(command, name):
+    global COUNTER
     if command == 1:
         message = input("Enter your message:")
-        print(send_to_server("send", name, message))
+        to_send = "send" + "/" + name + "/" + message
+        print(send_to_server(to_send))
     elif command == 2:
-        print(send_to_server("refresh"))
+        to_send = "refresh" + "/" + str(COUNTER)
+        response_params = send_to_server(to_send).split("/")
+        COUNTER += int(response_params[0])
+        print(response_params[1])
     elif command == 3:
         print(send_to_server("users"))
     elif command == 4:
         print("Bye!")
-        print(send_to_server("exit", username))
+        to_send = "exit" + "/" + username
+        print(send_to_server(to_send))
         sys.exit(0)
     print()
 
@@ -42,7 +48,7 @@ def handle_command(command, name):
 if __name__ == '__main__':
 
     username = input("Enter your name:")
-    send_to_server("join", username)
+    send_to_server("join" + "/" + username)
     print("Welcome " + username + " !")
     while True:
         run_menu(username)
